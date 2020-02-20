@@ -5,11 +5,15 @@
 *	\date		11/02/2020
 *
 */
+#pragma once
+#include "Rasterizer.h"
 /******************************************************************************
 	\fn		PerspectiveProjection
 	\brief	Calculates the perspective projection matrix
 ******************************************************************************/
 Matrix4 PerspectiveProjection();
+
+
 /******************************************************************************
 	\fn		WinToVP
 	\brief	Calculates the window to view

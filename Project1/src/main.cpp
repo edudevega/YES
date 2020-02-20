@@ -27,6 +27,9 @@ int main()
 	//Select the darwing mode
 	bool mode = 0;
 
+
+	
+
 	//Create all the parts of the tank
 	Body tank2(Vector4(30, 25, 80, 0), Vector4(0, 0, -125, 0), Vector4(0, 0, 0.5, 0), 0, Y_AXIS);
 	Turret turret(Vector4(25, 15, 25, 0), Vector4(0, 20, 0, 0), Vector4(0, 0, 0, 0), 0, Y_AXIS, tank2.GetMatrix());
@@ -35,6 +38,10 @@ int main()
 	Wheel wheel2(Vector4(5, 20, 20, 0), Vector4(-17.5, -12.5, -25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
 	Wheel wheel3(Vector4(5, 20, 20, 0), Vector4(17.5, -12.5, 25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
 	Wheel wheel4(Vector4(5, 20, 20, 0), Vector4(-17.5, -12.5, 25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
+
+
+	//Create the Camera 
+	Camera first(turret.mPos,turret.mOrientation,Vector4(0,1,0,0), turret.mOrientation.Cross( Vector4(0, 1, 0, 0)));
 
 	//Draw the the firts time
 	tank2.Draw(image, mode);
@@ -79,14 +86,16 @@ int main()
 		wheel3.Movement();
 		wheel4.Movement();
 
+		first.Update(tank2.mPos+turret.mPos);
+
 		//Update all the parts with the new transformations
-		tank2.Update();
-		turret.Update(tank2.GetMatrix());
-		gun.Update(tank2.GetMatrix(), turret.GetMatrix());
-		wheel1.Update(tank2.GetMatrix());
-		wheel2.Update(tank2.GetMatrix());
-		wheel3.Update(tank2.GetMatrix());
-		wheel4.Update(tank2.GetMatrix());
+		tank2.Update(first.WorldToCam());
+		turret.Update(first.WorldToCam(),tank2.GetMatrix());
+		gun.Update(first.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
+		wheel1.Update(first.WorldToCam(), tank2.GetMatrix());
+		wheel2.Update(first.WorldToCam(), tank2.GetMatrix());
+		wheel3.Update(first.WorldToCam(), tank2.GetMatrix());
+		wheel4.Update(first.WorldToCam(), tank2.GetMatrix());
 
 		//Draw them onto the screen
 		turret.Draw(image ,mode);

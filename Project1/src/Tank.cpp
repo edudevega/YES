@@ -44,13 +44,13 @@ Body::Body(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis) : mS
 	\fn		Update
 	\brief	Updates the vertices of the Body
 ******************************************************************************/
-void Body::Update() {
+void Body::Update(Matrix4 mat) {
 	
 	//Calculate the transformations
 	Matrix4 rot = Rotate(mAngle, mAxis);;
 	Matrix4 trans = Translate(mPos);
 	Matrix4 sca = Scale(mScale);
-	Matrix4 transform = trans * rot * sca; 
+	Matrix4 transform = mat * trans * rot * sca; 
 	Matrix4 pp = PerspectiveProjection();
 	Matrix4 wtp = WinToVP(-CS250Parser::bottom + CS250Parser::top, -CS250Parser::left + CS250Parser::right, 600, 800);
 
@@ -300,7 +300,7 @@ void Turret::Movement() {
 	\fn		Update
 	\brief	Updates the vertices of the turret
 ******************************************************************************/
-void Turret::Update(Matrix4 mat) {
+void Turret::Update(Matrix4 mat1,Matrix4 mat2) {
 	
 	//Calculate the transformation matrices
 	Matrix4 rot = Rotate(mAngle, mAxis);
@@ -310,7 +310,7 @@ void Turret::Update(Matrix4 mat) {
 	Matrix4 wtp = WinToVP(-CS250Parser::bottom + CS250Parser::top, -CS250Parser::left + CS250Parser::right, 600, 800);
 
 	//Multyply by the parents matrix
-	Matrix4 transform = mat  * trans * rot * sca;
+	Matrix4 transform = mat1 * mat2  * trans * rot * sca;
 
 	//Apply the to the vertices
 	for (int i = 0; i < 8; i++) {
@@ -443,7 +443,7 @@ void Gun::Movement() {
 	\fn		Update
 	\brief	Updates the vertices of the Gun
 ******************************************************************************/
-void Gun::Update(Matrix4 mat1 , Matrix4 mat2) {
+void Gun::Update(Matrix4 mat1 , Matrix4 mat2, Matrix4 mat3) {
 	
 	//Calculate the transformation matrices
 	Matrix4 rot = Rotate(mAngle, mAxis);
@@ -454,7 +454,7 @@ void Gun::Update(Matrix4 mat1 , Matrix4 mat2) {
 	Matrix4 trans2 = Translate(Vector4(0,0,20,0));
 	Matrix4 trans3 = Translate(Vector4(0, 0, -20, 0));
 	//Multyply by the parent matrix
-	Matrix4 transform = mat1 * mat2 * trans1* trans3 * rot  * trans2 * sca;
+	Matrix4 transform = mat1 * mat2 * mat3 * trans1* trans3 * rot  * trans2 * sca;
 
 	//Apply the to the vertices
 	for (int i = 0; i < 8; i++) {
@@ -503,35 +503,35 @@ Wheel::Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Ma
 		v[i] = wtp * v[i];
 	}
 }
-//
-///******************************************************************************
-//	\fn		Draw
-//	\brief	Draws the whee; in the method wanted
-//******************************************************************************/
-//void Wheel::Draw(sf::Image &image, bool mode) {
-//
-//	//For looping on the colors
-//	int i = 0;
-//
-//	//To draw all the vertices
-//	for (auto it = data.faces.begin(); it != data.faces.end(); ++it, i++) {
-//
-//		//if mode is solid
-//		if (mode == 0)
-//			DrawTriangleSolid(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y),
-//				sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y),
-//				sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y),
-//				sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-//
-//		//if mode is lines
-//		else {
-//			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-//			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-//			DrawMidpointLine(image, sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-//		}
-//
-//	}
-//}
+
+/******************************************************************************
+	\fn		Draw
+	\brief	Draws the whee; in the method wanted
+******************************************************************************/
+void Wheel::Draw(sf::Image &image, bool mode) {
+
+	//For looping on the colors
+	int i = 0;
+
+	//To draw all the vertices
+	for (auto it = data.faces.begin(); it != data.faces.end(); ++it, i++) {
+
+		//if mode is solid
+		if (mode == 0)
+			DrawTriangleSolid(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y),
+				sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y),
+				sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y),
+				sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
+
+		//if mode is lines
+		else {
+			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
+			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
+			DrawMidpointLine(image, sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
+		}
+
+	}
+}
 
 /******************************************************************************
 	\fn		Movement
@@ -566,29 +566,29 @@ void Wheel::Movement() {
 
 	
 }
-//
-///******************************************************************************
-//	\fn		Update
-//	\brief	Updates the vertices of the Wheel
-//******************************************************************************/
-//void Wheel::Update(Matrix4 mat) {
-//
-//	//Calculate the transformation matrices
-//	Matrix4 rot = Rotate(mAngle, mAxis);
-//	Matrix4 trans = Translate(mPos);
-//	Matrix4 sca = Scale(mScale);
-//	Matrix4 pp = PerspectiveProjection();
-//	Matrix4 wtp = WinToVP(-CS250Parser::bottom + CS250Parser::top, -CS250Parser::left + CS250Parser::right, 600, 800);
-//
-//	//Multyply by the parent matrix
-//	Matrix4 transform = mat * trans * rot * sca;
-//
-//	//Apply the to the vertices
-//	for (int i = 0; i < 8; i++) {
-//		v[i] = transform * v[i];
-//		v[i] = pp * v[i];
-//		v[i] = v[i] / v[i].w;
-//		v[i] = wtp * v[i];
-//	}
-//
-//}
+
+/******************************************************************************
+	\fn		Update
+	\brief	Updates the vertices of the Wheel
+******************************************************************************/
+void Wheel::Update(Matrix4 mat1, Matrix4 mat2) {
+
+	//Calculate the transformation matrices
+	Matrix4 rot = Rotate(mAngle, mAxis);
+	Matrix4 trans = Translate(mPos);
+	Matrix4 sca = Scale(mScale);
+	Matrix4 pp = PerspectiveProjection();
+	Matrix4 wtp = WinToVP(-CS250Parser::bottom + CS250Parser::top, -CS250Parser::left + CS250Parser::right, 600, 800);
+
+	//Multyply by the parent matrix
+	Matrix4 transform = mat1 * mat2 * trans * rot * sca;
+
+	//Apply the to the vertices
+	for (int i = 0; i < 8; i++) {
+		v[i] = transform * v[i];
+		v[i] = pp * v[i];
+		v[i] = v[i] / v[i].w;
+		v[i] = wtp * v[i];
+	}
+
+}

@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CS250Parser.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Matrix4.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="src\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CS250Parser.h" />
     <ClInclude Include="src\MathUtilities.h" />
     <ClInclude Include="src\Matrix4.h" />

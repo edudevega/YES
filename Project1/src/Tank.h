@@ -23,7 +23,7 @@ struct Body {
 	Body(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis);
 	void Movement();
 	void Draw(sf::Image &image, bool mode);
-	virtual void Update();
+	virtual void Update(Matrix4 mat);
 	virtual Matrix4 GetMatrix();
 	
 };
@@ -41,7 +41,7 @@ struct Turret  {
 	Vector4 v_world[8];
 	Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat);
 	void Draw(sf::Image &image, bool mode);
-	void Update(Matrix4 mat);
+	void Update(Matrix4 mat1, Matrix4 mat2);
 	Matrix4 GetMatrix();
 	void Movement();
 
@@ -60,7 +60,7 @@ struct Gun{
 	Vector4 v_world[8];
 	Gun(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat1, Matrix4 mat2);
 	void Draw(sf::Image &image ,bool mode);
-	void Update(Matrix4 mat1, Matrix4 mat2);
+	void Update(Matrix4 mat1, Matrix4 mat2, Matrix4 mat3);
 	Matrix4 GetMatrix();
 	void Movement();
 
@@ -79,7 +79,7 @@ struct Wheel {
 	Vector4 v_world[8];
 	Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat);
 	void Draw(sf::Image &image, bool mode);
-	void Update(Matrix4 mat);
+	void Update(Matrix4 mat1, Matrix4 mat2);
 	Matrix4 GetMatrix();
 	void Movement();
 

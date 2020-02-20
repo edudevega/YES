@@ -6,8 +6,7 @@
 *
 */
 
-#include "Rasterizer.h"
-
+#include "Pipeline.h"
 /******************************************************************************
 	\fn		PerspectiveProjection
 	\brief	Calculates the perspective projection matrix
@@ -30,6 +29,7 @@ Matrix4 PerspectiveProjection(void) {
 
 	return mat;
 }
+
 /******************************************************************************
 	\fn		WinToVP
 	\brief	Calculates the window to view

@@ -7,7 +7,7 @@
 #include "Point4.h"
 #include "Tank.h"
 #include "Pipeline.h"
-
+#include "Camera.h"
 //Axis for the rotation
 #define X_AXIS 1
 #define Y_AXIS 2
