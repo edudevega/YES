@@ -155,5 +155,66 @@ Matrix4 Rotate(float angle,int axis) {
 			}
 			return mat;
 }
+/******************************************************************************
+	\fn		Rotate
+	\brief	Calculates the Rotation matrix
+******************************************************************************/
+Matrix4 RotateEuler(float cosA, float sinA, int axis) {
+
+	Matrix4 mat;
+
+	//If the axis is the x or 1
+	if (axis == X_AXIS) {
+
+		//Set everything to zero
+		for (int i = 0; i < 16; i++)
+			mat.v[i] = 0;
+
+		//Set the values of the matrix
+		mat.m[0][0] = 1;
+		mat.m[1][1] = cosA;
+		mat.m[1][2] = -sinA;
+		mat.m[2][1] = sinA;
+		mat.m[2][2] = cosA;
+		mat.m[3][3] = 1;
+
+		return mat;
+	}
+	//If the axis is the y or 2
+	if (axis == Y_AXIS) {
+
+		//Set everything to zero
+		for (int i = 0; i < 16; i++)
+			mat.v[i] = 0;
+
+		//Set the values of the matrix
+		mat.m[0][0] = cosA;
+		mat.m[1][1] = 1;
+		mat.m[0][2] = sinA;
+		mat.m[2][2] = cosA;
+		mat.m[2][0] = -sinA;
+		mat.m[3][3] = 1;
+
+		return mat;
+	}
+	//If the axis is the z or 3
+	if (axis == Z_AXIS) {
+
+		//Set everything to zero
+		for (int i = 0; i < 16; i++)
+			mat.v[i] = 0;
+
+		//Set the values of the matrix
+		mat.m[0][0] = cosA;
+		mat.m[2][2] = 1;
+		mat.m[1][0] = sinA;
+		mat.m[1][1] = cosA;
+		mat.m[0][1] = -sinA;
+		mat.m[3][3] = 1;
+
+		return mat;
+	}
+	return mat;
+}
 
 

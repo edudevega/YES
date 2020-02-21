@@ -22,6 +22,5 @@ struct Camera {
 	\brief	Calculates world to camera transformation
 	******************************************************************************/
 	Matrix4 WorldToCam();
-
-	void Update(Vector4 vec);
+	void Update(Vector4 tPos, Vector4 tOre);
 };

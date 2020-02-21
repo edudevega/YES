@@ -51,7 +51,7 @@ int main()
 	wheel2.Draw(image,mode);
 	wheel3.Draw(image,mode);
 	wheel4.Draw(image,mode);
-
+	first.Update(tank2.mPos, tank2.mOrientation);
 	//Loop
 	while (window.isOpen())
 	{
@@ -85,8 +85,8 @@ int main()
 		wheel2.Movement();
 		wheel3.Movement();
 		wheel4.Movement();
-
-		first.Update(tank2.mPos+turret.mPos);
+		
+		first.Update(tank2.mPos, tank2.mOrientation);
 
 		//Update all the parts with the new transformations
 		tank2.Update(first.WorldToCam());

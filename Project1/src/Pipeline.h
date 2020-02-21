@@ -35,3 +35,4 @@ Matrix4 Translate(Vector4 vec);
 ******************************************************************************/
 Matrix4 Rotate(float angle, int axis);
 
+Matrix4 RotateEuler(float cosA, float sinA, int axis);

@@ -5,9 +5,10 @@
 #include "Matrix4.h"
 #include "Vector4.h"
 #include "Point4.h"
+#include "Camera.h"
 #include "Tank.h"
 #include "Pipeline.h"
-#include "Camera.h"
+
 //Axis for the rotation
 #define X_AXIS 1
 #define Y_AXIS 2
