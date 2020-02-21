@@ -172,10 +172,16 @@ Matrix4 Body::GetMatrix() {
 	\fn		turret Constructor
 	\brief	Constructor for the turret class
 ******************************************************************************/
-Turret::Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis,Matrix4 mat) : mScale(Scale_), mPos(Pos), mAxis(Axis), mAngle(Angle), mOrientation(Ore) {
-	
+Turret::Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis,Matrix4 mat){
+
+
+	Body::mScale = Scale_;
+	Body::mPos = Pos;
+	Body::mOrientation = Ore;
+	Body::mAngle = Angle;
+	Body::mAxis = Axis;
 	//Load the data from the file
-	data.LoadDataFromFile();
+	Body::data.LoadDataFromFile();
 
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
@@ -186,7 +192,7 @@ Turret::Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis,M
 	}
 
 	//Calculate the transformation matrices
-	Matrix4 rot = Rotate(mAngle, mAxis);
+	Matrix4 rot = Rotate(mAngle,mAxis);
 	Matrix4 trans = Translate(mPos);
 	Matrix4 sca = Scale(mScale);
 	Matrix4 pp = PerspectiveProjection();
@@ -201,37 +207,6 @@ Turret::Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis,M
 		v[i] = pp * v[i];
 		v[i] = v[i] / v[i].w;
 		v[i] = wtp * v[i];
-	}
-}
-
-/******************************************************************************
-	\fn		Draw
-	\brief	Draws the turret in the method wanted
-******************************************************************************/
-void Turret::Draw(sf::Image &image , bool mode) {
-
-	//For looping on the colors
-	int i = 0;
-
-	//To draw all the vertices
-	for (auto it = data.faces.begin(); it != data.faces.end(); ++it, i++) {
-
-		//if mode is solid
-		if (mode == 0)
-			DrawTriangleSolid(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y),
-				sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y),
-				sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y),
-				sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-
-		//if mode is lines
-		else {
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-
-
-		}
-
 	}
 }
 
@@ -327,10 +302,14 @@ void Turret::Update(Matrix4 mat1,Matrix4 mat2) {
 	\fn		Gun Constructor
 	\brief	Constructor for the Gun class
 ******************************************************************************/
-Gun::Gun(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat1, Matrix4 mat2) : mScale(Scale_), mPos(Pos), mAxis(Axis), mAngle(Angle), mOrientation(Ore) {
-	
+Gun::Gun(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat1, Matrix4 mat2) {
+	Body::mScale = Scale_;
+	Body::mPos = Pos;
+	Body::mOrientation = Ore;
+	Body::mAngle = Angle;
+	Body::mAxis = Axis;
 	//Load the data from the file
-	data.LoadDataFromFile();
+	Body::data.LoadDataFromFile();
 
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
@@ -359,36 +338,7 @@ Gun::Gun(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix
 	}
 }
 
-/******************************************************************************
-	\fn		Draw
-	\brief	Draws the Gun in the method wanted
-******************************************************************************/
-void Gun::Draw(sf::Image &image, bool mode) {
 
-	//For looping on the colors
-	int i = 0;
-
-	//To draw all the vertices
-	for (auto it = data.faces.begin(); it != data.faces.end(); ++it, i++) {
-
-		//if mode is solid
-		if (mode == 0)
-			DrawTriangleSolid(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y),
-				sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y),
-				sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y),
-				sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-
-		//if mode is lines
-		else {
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-
-
-		}
-
-	}
-}
 
 /******************************************************************************
 	\fn		Movement
@@ -472,10 +422,16 @@ void Gun::Update(Matrix4 mat1 , Matrix4 mat2, Matrix4 mat3) {
 	\fn		Wheel Constructor
 	\brief	Constructor for the Wheel class
 ******************************************************************************/
-Wheel::Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat) : mScale(Scale_), mPos(Pos), mAxis(Axis), mAngle(Angle), mOrientation(Ore) {
-	
+Wheel::Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat){
+
+	Body::mScale = Scale_;
+	Body::mPos = Pos;
+	Body::mOrientation = Ore;
+	Body::mAngle = Angle;
+	Body::mAxis = Axis;
+
 	//Load the data from the file
-	data.LoadDataFromFile();
+	Body::data.LoadDataFromFile();
 
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
@@ -501,35 +457,6 @@ Wheel::Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Ma
 		v[i] = pp * v[i];
 		v[i] = v[i] / v[i].w;
 		v[i] = wtp * v[i];
-	}
-}
-
-/******************************************************************************
-	\fn		Draw
-	\brief	Draws the whee; in the method wanted
-******************************************************************************/
-void Wheel::Draw(sf::Image &image, bool mode) {
-
-	//For looping on the colors
-	int i = 0;
-
-	//To draw all the vertices
-	for (auto it = data.faces.begin(); it != data.faces.end(); ++it, i++) {
-
-		//if mode is solid
-		if (mode == 0)
-			DrawTriangleSolid(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y),
-				sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y),
-				sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y),
-				sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-
-		//if mode is lines
-		else {
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-			DrawMidpointLine(image, sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-		}
-
 	}
 }
 
@@ -565,30 +492,4 @@ void Wheel::Movement() {
 	}
 
 	
-}
-
-/******************************************************************************
-	\fn		Update
-	\brief	Updates the vertices of the Wheel
-******************************************************************************/
-void Wheel::Update(Matrix4 mat1, Matrix4 mat2) {
-
-	//Calculate the transformation matrices
-	Matrix4 rot = Rotate(mAngle, mAxis);
-	Matrix4 trans = Translate(mPos);
-	Matrix4 sca = Scale(mScale);
-	Matrix4 pp = PerspectiveProjection();
-	Matrix4 wtp = WinToVP(-CS250Parser::bottom + CS250Parser::top, -CS250Parser::left + CS250Parser::right, 600, 800);
-
-	//Multyply by the parent matrix
-	Matrix4 transform = mat1 * mat2 * trans * rot * sca;
-
-	//Apply the to the vertices
-	for (int i = 0; i < 8; i++) {
-		v[i] = transform * v[i];
-		v[i] = pp * v[i];
-		v[i] = v[i] / v[i].w;
-		v[i] = wtp * v[i];
-	}
-
 }

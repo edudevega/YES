@@ -8,7 +8,7 @@ Camera::Camera(Vector4 camPos_ ,Vector4 view_, Vector4 up_, Vector4 right_) :cam
 	\brief	Calculates the world to camera
 ******************************************************************************/
 Matrix4 Camera::WorldToCam() {
-	/*Matrix4 mat;
+	Matrix4 mat;
 	mat.m[0][0] = 1;
 	mat.m[0][1] = 0;
 	mat.m[0][2] = 0;
@@ -26,9 +26,9 @@ Matrix4 Camera::WorldToCam() {
 	mat.m[3][2] = 0;
 	mat.m[3][3] = 1;
 	
-	return mat;*/
+	return mat;
 
-	return Translate(-camPosV);
+	//return Translate(-camPosV);
 }
 
 void Camera::Update(Vector4 vec) {

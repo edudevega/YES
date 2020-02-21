@@ -20,6 +20,7 @@ struct Body {
 	CS250Parser data;
 	Vector4 v[8];
 	Vector4 v_world[8];
+	Body() : mScale(Vector4(0,0,0,0)), mPos(Vector4(0, 0, 0, 0)), mAxis(0), mAngle(0), mOrientation(Vector4(0, 0, 0, 0)) {}
 	Body(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis);
 	void Movement();
 	void Draw(sf::Image &image, bool mode);
@@ -27,60 +28,26 @@ struct Body {
 	virtual Matrix4 GetMatrix();
 	
 };
-struct Turret  {
+struct Turret :public Body {
 
-	Vector4 mScale;
-
-	Vector4 mPos;
-
-	Vector4 mOrientation;
-	float mAngle;
-	int mAxis;
-	CS250Parser data;
-	Vector4 v[8];
-	Vector4 v_world[8];
+	Turret();
 	Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat);
-	void Draw(sf::Image &image, bool mode);
 	void Update(Matrix4 mat1, Matrix4 mat2);
 	Matrix4 GetMatrix();
 	void Movement();
 
 };
-struct Gun{
+struct Gun : public Body{
 
-	Vector4 mScale;
-
-	Vector4 mPos;
-
-	Vector4 mOrientation;
-	float mAngle;
-	int mAxis;
-	CS250Parser data;
-	Vector4 v[8];
-	Vector4 v_world[8];
+	
 	Gun(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat1, Matrix4 mat2);
-	void Draw(sf::Image &image ,bool mode);
 	void Update(Matrix4 mat1, Matrix4 mat2, Matrix4 mat3);
-	Matrix4 GetMatrix();
 	void Movement();
 
 };
-struct Wheel {
+struct Wheel : Turret{
 
-	Vector4 mScale;
-
-	Vector4 mPos;
-
-	Vector4 mOrientation;
-	float mAngle;
-	int mAxis;
-	CS250Parser data;
-	Vector4 v[8];
-	Vector4 v_world[8];
 	Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix4 mat);
-	void Draw(sf::Image &image, bool mode);
-	void Update(Matrix4 mat1, Matrix4 mat2);
-	Matrix4 GetMatrix();
 	void Movement();
 
 };
