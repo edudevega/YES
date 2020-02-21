@@ -56,7 +56,7 @@ Matrix4 Camera::WorldToCam() {
 		mat.m[3][2] = 0;
 		mat.m[3][3] = 1;
 		return finalRot;
-		//return mat;
+		return mat;
 		
 	
 
@@ -66,7 +66,7 @@ Matrix4 Camera::WorldToCam() {
 void Camera::Update(Vector4 tPos, Vector4 tOre) {
 
 	
-	camPosV = tPos - tOre * 100 + Vector4(0, 1, 0, 0) * 100;
+	camPosV = tPos - tOre * distance + Vector4(0, 1, 0, 0) * height;
 	viewV = (tPos - camPosV) / (tPos.Length() - camPosV.Length());
 	rightV  = viewV.Cross(Vector4(0, 1, 0, 0));
 	upV  = rightV.Cross(viewV);
@@ -75,4 +75,31 @@ void Camera::Update(Vector4 tPos, Vector4 tOre) {
 	rightV  = Vector4(0, 1, 0, 0);
 	upV  = Vector4(0, 1, -1, 0);*/
 	
+}
+void  Camera::Movement() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {}
+	//if E is pressed rotate the body
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+		distance++;
+	
+	}
+
+	//if Q is pressed rotate the body
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && distance >0) {
+
+		distance--;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::H) && sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {}
+	//if E is pressed rotate the body
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+		height++;
+
+	}
+
+	//if Q is pressed rotate the body
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H) && distance > 0) {
+
+		height--;
+	}
 }

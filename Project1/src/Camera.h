@@ -15,7 +15,8 @@ struct Camera {
 	Vector4 viewV;
 	Vector4 upV;
 	Vector4 rightV;
-
+	float height = 50;
+	float distance = 50;
 
 	/******************************************************************************
 	\fn		WorldToCam
@@ -23,4 +24,5 @@ struct Camera {
 	******************************************************************************/
 	Matrix4 WorldToCam();
 	void Update(Vector4 tPos, Vector4 tOre);
+	void Movement();
 };

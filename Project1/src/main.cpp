@@ -76,8 +76,9 @@ int main()
 
 		//Refresh the frame
 		image.create(800, 600, sf::Color::White);
-
+		
 		//Get the input for the user for all the parts
+		first.Movement();
 		tank2.Movement();
 		turret.Movement();
 		gun.Movement();
@@ -86,9 +87,10 @@ int main()
 		wheel3.Movement();
 		wheel4.Movement();
 		
-		first.Update(tank2.mPos, tank2.mOrientation);
+		
 
 		//Update all the parts with the new transformations
+		first.Update(tank2.mPos, -tank2.mOrientation);
 		tank2.Update(first.WorldToCam());
 		turret.Update(first.WorldToCam(),tank2.GetMatrix());
 		gun.Update(first.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
