@@ -55,7 +55,7 @@ Matrix4 Camera::WorldToCam() {
 		mat.m[3][1] = 0;
 		mat.m[3][2] = 0;
 		mat.m[3][3] = 1;
-		return finalRot;
+		//return finalRot;
 		return mat;
 		
 	
@@ -98,7 +98,7 @@ void  Camera::Movement() {
 	}
 
 	//if Q is pressed rotate the body
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H) && distance > 0) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H) && height > 0) {
 
 		height--;
 	}

@@ -27,11 +27,16 @@ int main()
 	//Select the darwing mode
 	bool mode = 0;
 
-
-	
-
+	Body cubes[25];
+	int count = 0;
+	for (int x = 5,r = -100 ; x <= 5; x++ , r+= 40) {
+		for (int y = 5,w = -100; y <= 5; y++ , w += 40) {
+			cubes [count]= Body(Vector4(10, 10, 10, 0),Vector4(-r, 0, -w, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
+			count++;
+		}
+	}
 	//Create all the parts of the tank
-	Body tank2(Vector4(30, 25, 80, 0), Vector4(0, 0, -125, 0), Vector4(0, 0, 0.5, 0), 0, Y_AXIS);
+	Body tank2(Vector4(30, 25, 80, 0), Vector4(-100, 0, -100, 0), Vector4(0, 0, 0.5, 0), 0, Y_AXIS);
 	Turret turret(Vector4(25, 15, 25, 0), Vector4(0, 20, 0, 0), Vector4(0, 0, 0, 0), 0, Y_AXIS, tank2.GetMatrix());
 	Gun gun(Vector4(5,5, 40, 0), Vector4(0, 0, 12.5+20, 0), Vector4(0, 0, 1, 0), 0, X_AXIS, tank2.GetMatrix(),turret.GetMatrix());
 	Wheel wheel1(Vector4(5,20, 20, 0), Vector4(17.5, -12.5, -25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
@@ -90,7 +95,7 @@ int main()
 		
 
 		//Update all the parts with the new transformations
-		first.Update(tank2.mPos, -tank2.mOrientation);
+		first.Update(tank2.mPos, tank2.mOrientation);
 		tank2.Update(first.WorldToCam());
 		turret.Update(first.WorldToCam(),tank2.GetMatrix());
 		gun.Update(first.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
@@ -98,6 +103,12 @@ int main()
 		wheel2.Update(first.WorldToCam(), tank2.GetMatrix());
 		wheel3.Update(first.WorldToCam(), tank2.GetMatrix());
 		wheel4.Update(first.WorldToCam(), tank2.GetMatrix());
+		
+		for (int i = 0; i < 25; i++) {
+			cubes[i].Update(first.WorldToCam());
+			cubes[i].Draw(image, mode);
+		}
+
 
 		//Draw them onto the screen
 		turret.Draw(image ,mode);
