@@ -68,13 +68,17 @@ void Camera::Update(Vector4 tPos, Vector4 tOre) {
 	
 	camPosV = tPos - tOre * distance + Vector4(0, 1, 0, 0) * height;
 	viewV = (tPos - camPosV) / (tPos.Length() - camPosV.Length());
-	rightV  = viewV.Cross(Vector4(0, 1, 0, 0));
-	upV  = rightV.Cross(viewV);
+	rightV = viewV.Cross(Vector4(0, 1, 0, 0));
+	upV = rightV.Cross(viewV); 
 	/*camPosV =  Vector4(3, 2, -1, 0) ;
 	viewV = Vector4(2, 1, 1, 0);
 	rightV  = Vector4(0, 1, 0, 0);
 	upV  = Vector4(0, 1, -1, 0);*/
-	
+	/*camPosV = tPos;
+	viewV = tOre;
+	rightV = viewV.Cross(Vector4(0, 1, 0, 0));
+	upV = rightV.Cross(viewV); 
+	*/
 }
 void  Camera::Movement() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {}

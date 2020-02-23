@@ -36,7 +36,7 @@ int main()
 		}
 	}
 	//Create all the parts of the tank
-	Body tank2(Vector4(30, 25, 80, 0), Vector4(-100, 0, -100, 0), Vector4(0, 0, 0.5, 0), 0, Y_AXIS);
+	Body tank2(Vector4(30, 25, 80, 0), Vector4(0, 0, -100, 0), Vector4(0, 0, 0.5, 0), 0, Y_AXIS);
 	Turret turret(Vector4(25, 15, 25, 0), Vector4(0, 20, 0, 0), Vector4(0, 0, 0, 0), 0, Y_AXIS, tank2.GetMatrix());
 	Gun gun(Vector4(5,5, 40, 0), Vector4(0, 0, 12.5+20, 0), Vector4(0, 0, 1, 0), 0, X_AXIS, tank2.GetMatrix(),turret.GetMatrix());
 	Wheel wheel1(Vector4(5,20, 20, 0), Vector4(17.5, -12.5, -25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
@@ -56,7 +56,9 @@ int main()
 	wheel2.Draw(image,mode);
 	wheel3.Draw(image,mode);
 	wheel4.Draw(image,mode);
-	first.Update(tank2.mPos, tank2.mOrientation);
+	//first.Update(tank2.mPos, tank2.mOrientation);
+	first.Update(turret.mPos, gun.mOrientation);
+	first.Movement();
 	//Loop
 	while (window.isOpen())
 	{
@@ -83,7 +85,7 @@ int main()
 		image.create(800, 600, sf::Color::White);
 		
 		//Get the input for the user for all the parts
-		first.Movement();
+		//first.Movement();
 		tank2.Movement();
 		turret.Movement();
 		gun.Movement();
@@ -95,7 +97,7 @@ int main()
 		
 
 		//Update all the parts with the new transformations
-		first.Update(tank2.mPos, tank2.mOrientation);
+		//first.Update(tank2.mPos, tank2.mOrientation);
 		tank2.Update(first.WorldToCam());
 		turret.Update(first.WorldToCam(),tank2.GetMatrix());
 		gun.Update(first.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
@@ -118,7 +120,9 @@ int main()
 		wheel2.Draw(image,mode);
 		wheel3.Draw(image,mode);
 		wheel4.Draw(image,mode);
-
+		for (int i = 0; i < 25; i++) {
+			cubes[i].Draw(image, mode);
+		}
 		//SFML Stuff
 		window.clear();
 		texture.update(image);
