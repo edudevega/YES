@@ -26,17 +26,19 @@ int main()
 	
 	//Select the darwing mode
 	bool mode = 0;
-
-	Body cubes[25];
+	int camMode = 0;
+	Cube cubes[25];
 	int count = 0;
-	for (int x = 5,r = -100 ; x <= 5; x++ , r+= 40) {
-		for (int y = 5,w = -100; y <= 5; y++ , w += 40) {
-			cubes [count]= Body(Vector4(10, 10, 10, 0),Vector4(-r, 0, -w, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
+	for (int x = 5,r = 100 ; x <= 5; x++ , r-= 20) {
+		for (int y = 5,w = 100; y <= 5; y++ , w -= 20) {
+			cubes [count]= Cube(Vector4(10, 10, 10, 0),Vector4(0, 0, -w, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
 			count++;
 		}
 	}
+
+	
 	//Create all the parts of the tank
-	Body tank2(Vector4(30, 25, 80, 0), Vector4(-100, 0, -100, 0), Vector4(0, 0, 0.5, 0), 0, Y_AXIS);
+	Body tank2(Vector4(30, 25, 80, 0), Vector4(0, 0, -100, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
 	Turret turret(Vector4(25, 15, 25, 0), Vector4(0, 20, 0, 0), Vector4(0, 0, 0, 0), 0, Y_AXIS, tank2.GetMatrix());
 	Gun gun(Vector4(5,5, 40, 0), Vector4(0, 0, 12.5+20, 0), Vector4(0, 0, 1, 0), 0, X_AXIS, tank2.GetMatrix(),turret.GetMatrix());
 	Wheel wheel1(Vector4(5,20, 20, 0), Vector4(17.5, -12.5, -25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
@@ -44,11 +46,23 @@ int main()
 	Wheel wheel3(Vector4(5, 20, 20, 0), Vector4(17.5, -12.5, 25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
 	Wheel wheel4(Vector4(5, 20, 20, 0), Vector4(-17.5, -12.5, 25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
 
-
+	Cube yes(Vector4(10, 10, 10, 0), Vector4(10, 0, -200, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
 	//Create the Camera 
-	Camera first(turret.mPos,turret.mOrientation,Vector4(0,1,0,0), turret.mOrientation.Cross( Vector4(0, 1, 0, 0)));
+	Camera third;
+	third.Update(tank2.mPos, tank2.mOrientation);
+	Camera fixed;
+	fixed.Update(Vector4 (0,0,0), Vector4(0,0,-1));
 
+	tank2.Update(third.WorldToCam());
+	turret.Update(third.WorldToCam(), tank2.GetMatrix());
+	gun.Update(third.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
+	wheel1.Update(third.WorldToCam(), tank2.GetMatrix());
+	wheel2.Update(third.WorldToCam(), tank2.GetMatrix());
+	wheel3.Update(third.WorldToCam(), tank2.GetMatrix());
+	wheel4.Update(third.WorldToCam(), tank2.GetMatrix());
+	yes.Update(third.WorldToCam());
 	//Draw the the firts time
+	yes.Draw(image, mode);
 	tank2.Draw(image, mode);
 	turret.Draw(image, mode);
 	gun.Draw(image, mode);
@@ -56,7 +70,7 @@ int main()
 	wheel2.Draw(image,mode);
 	wheel3.Draw(image,mode);
 	wheel4.Draw(image,mode);
-	first.Update(tank2.mPos, tank2.mOrientation);
+	
 	//Loop
 	while (window.isOpen())
 	{
@@ -83,7 +97,7 @@ int main()
 		image.create(800, 600, sf::Color::White);
 		
 		//Get the input for the user for all the parts
-		first.Movement();
+		third.Movement();
 		tank2.Movement();
 		turret.Movement();
 		gun.Movement();
@@ -93,31 +107,32 @@ int main()
 		wheel4.Movement();
 		
 		
-
+	
 		//Update all the parts with the new transformations
-		first.Update(tank2.mPos, tank2.mOrientation);
-		tank2.Update(first.WorldToCam());
-		turret.Update(first.WorldToCam(),tank2.GetMatrix());
-		gun.Update(first.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
-		wheel1.Update(first.WorldToCam(), tank2.GetMatrix());
-		wheel2.Update(first.WorldToCam(), tank2.GetMatrix());
-		wheel3.Update(first.WorldToCam(), tank2.GetMatrix());
-		wheel4.Update(first.WorldToCam(), tank2.GetMatrix());
+		third.Update(tank2.mPos, tank2.mOrientation);
+		tank2.Update(third.WorldToCam());
+		turret.Update(third.WorldToCam(),tank2.GetMatrix());
+		gun.Update(third.WorldToCam(), tank2.GetMatrix(), turret.GetMatrix());
+		wheel1.Update(third.WorldToCam(), tank2.GetMatrix());
+		wheel2.Update(third.WorldToCam(), tank2.GetMatrix());
+		wheel3.Update(third.WorldToCam(), tank2.GetMatrix());
+		wheel4.Update(third.WorldToCam(), tank2.GetMatrix());
 		
-		for (int i = 0; i < 25; i++) {
-			cubes[i].Update(first.WorldToCam());
-			cubes[i].Draw(image, mode);
-		}
+	
+		yes.Update(third.WorldToCam());
+		yes.Draw(image, mode);
+		
 
 
 		//Draw them onto the screen
-		turret.Draw(image ,mode);
+		
 		tank2.Draw(image, mode);
+		turret.Draw(image, mode);
 		gun.Draw(image, mode);
-		wheel1.Draw(image,mode);
-		wheel2.Draw(image,mode);
-		wheel3.Draw(image,mode);
-		wheel4.Draw(image,mode);
+		wheel1.Draw(image, mode);
+		wheel2.Draw(image, mode);
+		wheel3.Draw(image, mode);
+		wheel4.Draw(image, mode);
 
 		//SFML Stuff
 		window.clear();

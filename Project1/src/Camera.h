@@ -10,10 +10,11 @@
 
 struct Camera {
 
+	Camera();
 	Camera(Vector4 camPos_ ,Vector4 view_,Vector4 up_, Vector4 right_);
 	Vector4 camPosV;
-	Vector4 viewV;
-	Vector4 upV;
+	Vector4 viewV = Vector4(0.0f, 0.0f, -1.0f);
+	Vector4 upV = Vector4(0.0f, 1.0f, 0.0f);
 	Vector4 rightV;
 	float height = 50;
 	float distance = 120;
@@ -25,4 +26,10 @@ struct Camera {
 	Matrix4 WorldToCam();
 	void Update(Vector4 tPos, Vector4 tOre);
 	void Movement();
+};
+struct Fixed : Camera {
+
+	Fixed();
+	float height = 0;
+	float distance = 0;
 };
