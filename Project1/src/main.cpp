@@ -38,8 +38,8 @@ int main()
 	
 	
 	//Create all the parts of the tank
-	Body tank2(Vector4(30, 25, 80, 0), Vector4(0, 0, -20, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
-	Turret turret(Vector4(25, 15, 25, 0), Vector4(0, 20, 0, 0), Vector4(0, 0, 0, 0), 0, Y_AXIS, tank2.GetMatrix());
+	Body tank2(Vector4(30, 25, 80, 0), Vector4(0, 0, -50, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS);
+	Turret turret(Vector4(25, 15, 25, 0), Vector4(0, 20, 0, 0), Vector4(0, 0, 1, 0), 0, Y_AXIS, tank2.GetMatrix());
 	Gun gun(Vector4(5,5, 40, 0), Vector4(0, 0, 12.5+20, 0), Vector4(0, 0, 1, 0), 0, X_AXIS, tank2.GetMatrix(),turret.GetMatrix());
 	Wheel wheel1(Vector4(5,20, 20, 0), Vector4(17.5, -12.5, -25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
 	Wheel wheel2(Vector4(5, 20, 20, 0), Vector4(-17.5, -12.5, -25, 0), Vector4(0, 0, 0, 0), 0, X_AXIS, tank2.GetMatrix());
@@ -49,7 +49,7 @@ int main()
 	
 	//Create the Camera 
 	Camera first;
-	first.Update((tank2.GetMatrix()*turret.mPos), turret.mOrientation, camMode);
+	first.Update(Vector4(tank2.mPos.x,tank2.mPos.y + tank2.mScale.y/2+ turret.mScale.y / 2,tank2.mPos.z) , Rotate(tank2.mAngle + turret.mAngle, Y_AXIS) * Vector4(0, 0, 1, 0), camMode);
 	Camera third;
 	third.Update(tank2.mPos, tank2.mOrientation, camMode);
 	Camera fixed;
@@ -86,6 +86,7 @@ int main()
 			mode = 1;
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
 			mode = 0;
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
 			camMode = 0;
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
@@ -110,6 +111,8 @@ int main()
 		
 		//Get the input for the user for all the parts
 		third.Movement();
+		first.Movement();
+		fixed.Movement();
 		tank2.Movement();
 		turret.Movement();
 		gun.Movement();
@@ -117,13 +120,13 @@ int main()
 		wheel2.Movement();
 		wheel3.Movement();
 		wheel4.Movement();
-		first.Movement();
-		fixed.Movement();
+		
 		
 	
 		//Update all the parts with the new transformations
-		third.Update(tank2.mPos, tank2.mOrientation,camMode);
-		first.Update((tank2.GetMatrix()*turret.mPos), tank2.mOrientation, camMode);
+		fixed.Update(Vector4(0, 0, 0), Vector4(0, 0, -1), camMode);
+		third.Update(tank2.mPos,tank2.mOrientation,camMode);
+		first.Update((tank2.mPos + turret.mPos), Rotate(tank2.mAngle + turret.mAngle, Y_AXIS) * Vector4(0, 0, 1, 0), camMode);
 		if (camMode == 0) {
 			tank2.Update(first.WorldToCam());
 			turret.Update(first.WorldToCam(), tank2.GetMatrix());

@@ -17,7 +17,7 @@ struct Camera {
 	Vector4 upV = Vector4(0.0f, 1.0f, 0.0f);
 	Vector4 rightV;
 	float height = 50;
-	float distance = 120;
+	float distance = 100;
 
 	/******************************************************************************
 	\fn		WorldToCam

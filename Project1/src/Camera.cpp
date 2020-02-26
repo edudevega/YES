@@ -66,12 +66,12 @@ Matrix4 Camera::WorldToCam() {
 
 void Camera::Update(Vector4 tPos, Vector4 tOre, int  camMode) {
 
-	if (camMode = 0) {
+	if (camMode == 0) {
 		camPosV = tPos;
 		viewV = tOre;
 		rightV = Vector4(0, 1, 0, 0);
 		upV = Vector4(0, 1, 0, 0);
-		
+		return;
 		
 	}
 	else if (camMode == 1) {
@@ -80,7 +80,7 @@ void Camera::Update(Vector4 tPos, Vector4 tOre, int  camMode) {
 		rightV = viewV.Cross(Vector4(0, 1, 0, 0));
 		upV = rightV.Cross(viewV);
 	}
-	else {
+	else  if (camMode == 2) {
 		camPosV = Vector4(0, 0, 0, 0);
 		viewV = Vector4(0, 0, -1, 0);
 		rightV = Vector4(1, 0, 0, 0);
@@ -89,6 +89,7 @@ void Camera::Update(Vector4 tPos, Vector4 tOre, int  camMode) {
 	
 }
 void  Camera::Movement() {
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {}
 	//if E is pressed rotate the body
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {

@@ -118,16 +118,14 @@ void Body::Draw(sf::Image &image, bool mode) {
 	for (int i = 0; i < 8; i++) {
 		v[i] = mTransform * v[i];
 		if (v[i].z > -data.nearPlane)
-			mIsDrawable = 0;
-		else 
-			mIsDrawable = 1;
+			return;
 		v[i] = mPP * v[i];
 		v[i] = v[i] / v[i].w;
 		v[i] = mWtV * v[i];
 	}
 	//For looping on the colors
 	int i = 0; 
-	if (mIsDrawable) {
+
 		//To draw all the vertices
 		for (auto it = data.faces.begin(); it != data.faces.end(); ++it, i++) {
 			//if mode is solid
@@ -142,9 +140,6 @@ void Body::Draw(sf::Image &image, bool mode) {
 				DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
 				DrawMidpointLine(image, sf::Vector2f(v[it->indices[0]].x, v[it->indices[0]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
 				DrawMidpointLine(image, sf::Vector2f(v[it->indices[1]].x, v[it->indices[1]].y), sf::Vector2f(v[it->indices[2]].x, v[it->indices[2]].y), sf::Color((int)data.colors[i].x, (int)data.colors[i].y, (int)data.colors[i].z, 255));
-
-
-			}
 
 		}
 	}
@@ -239,8 +234,8 @@ void Turret::Movement() {
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
 
 		//increase the angle
-		angle += 0.05f;
-		mAngle += 0.05f;
+		angle -= 0.05f;
+		mAngle -= 0.05f;
 
 		//Calculate the rotation matrix by that angle
 		Matrix4 rot = Rotate(angle, mAxis);
@@ -253,8 +248,8 @@ void Turret::Movement() {
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 
 		//Decrese the angle
-		angle -= 0.05f;
-		mAngle -= 0.05f;
+		angle += 0.05f;
+		mAngle += 0.05f;
 
 		//Calculate the rotation matrix by that angle
 		Matrix4 rot = Rotate(angle, mAxis);
