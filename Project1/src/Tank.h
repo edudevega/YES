@@ -57,7 +57,16 @@ struct Wheel : Turret{
 
 struct Cube : Body {
 
-	Cube() {}
+	Cube() { 
+		//data.LoadDataFromFile();
+	}
 	Cube(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis);
-	void Movement() {}
+	void Movement() {
+		for (int i = 0; i < 8; i++) {
+			v[i].x = data.vertices[i].x;
+			v[i].y = data.vertices[i].y;
+			v[i].z = data.vertices[i].z;
+			v[i].w = data.vertices[i].w;
+		}
+	}
 };

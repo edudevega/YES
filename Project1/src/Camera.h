@@ -24,12 +24,7 @@ struct Camera {
 	\brief	Calculates world to camera transformation
 	******************************************************************************/
 	Matrix4 WorldToCam();
-	void Update(Vector4 tPos, Vector4 tOre);
+	void Update(Vector4 tPos, Vector4 tOre, int  camMode);
 	void Movement();
 };
-struct Fixed : Camera {
 
-	Fixed();
-	float height = 0;
-	float distance = 0;
-};

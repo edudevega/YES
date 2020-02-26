@@ -13,7 +13,7 @@
 Body::Body(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis) : mScale(Scale_), mPos(Pos), mAxis(Axis), mAngle(Angle), mOrientation(Ore) {
 
 	//Load the data from the file
-	data.LoadDataFromFile();
+	//data.LoadDataFromFile();
 
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
@@ -181,8 +181,7 @@ Turret::Turret(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis,M
 	Body::mOrientation = Ore;
 	Body::mAngle = Angle;
 	Body::mAxis = Axis;
-	//Load the data from the file
-	Body::data.LoadDataFromFile();
+
 
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
@@ -295,8 +294,6 @@ Gun::Gun(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Matrix
 	Body::mAngle = Angle;
 	Body::mAxis = Axis;
 	//Load the data from the file
-	Body::data.LoadDataFromFile();
-
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
 		v[i].x = data.vertices[i].x;
@@ -399,8 +396,6 @@ Wheel::Wheel(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis, Ma
 	Body::mAngle = Angle;
 	Body::mAxis = Axis;
 
-	//Load the data from the file
-	Body::data.LoadDataFromFile();
 
 	//Set the array of vertex to the data vertices
 	for (int i = 0; i < 8; i++) {
@@ -437,7 +432,7 @@ void Wheel::Movement() {
 
 	//Reset the vertices
 	for (int i = 0; i < 8; i++) {
-		v[i].x = data.vertices[i].x;
+		v[i].x = CS250Parser::vertices[i].x;
 		v[i].y = data.vertices[i].y;
 		v[i].z = data.vertices[i].z;
 		v[i].w = data.vertices[i].w;
@@ -460,10 +455,25 @@ void Wheel::Movement() {
 		mOrientation = rot * mOrientation;
 	}
 }
-Cube::Cube(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis) {
-	mScale = Scale_;
-	mPos = Pos;
-	mOrientation = Ore;
-	mAngle = Angle;
-	mAxis = mAxis;
+Cube::Cube(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis) : Body(Scale_,Pos,Ore,Angle,Axis){
+	//Load the data from the file
+	//Body::data.LoadDataFromFile();
+
+	//Set the array of vertex to the data vertices
+	for (int i = 0; i < 8; i++) {
+		v[i].x = data.vertices[i].x;
+		v[i].y = data.vertices[i].y;
+		v[i].z = data.vertices[i].z;
+		v[i].w = data.vertices[i].w;
+	}
+
+	//Calculate the mTransformation matrices
+	Matrix4 rot = Rotate(mAngle, mAxis);
+	Matrix4 trans = Translate(mPos);
+	Matrix4 sca = Scale(mScale);
+	mTransform = trans * rot * sca;
+	mPP = PerspectiveProjection();
+	mWtV = WinToVP(-CS250Parser::bottom + CS250Parser::top, -CS250Parser::left + CS250Parser::right, 600, 800);
+
+
 }

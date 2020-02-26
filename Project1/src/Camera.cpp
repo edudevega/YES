@@ -64,17 +64,28 @@ Matrix4 Camera::WorldToCam() {
 	return Rotate(-30, Y_AXIS) * Rotate(-45, Z_AXIS) * Rotate(90, X_AXIS) *Translate(-camPosV);
 }
 
-void Camera::Update(Vector4 tPos, Vector4 tOre) {
+void Camera::Update(Vector4 tPos, Vector4 tOre, int  camMode) {
 
-	
-	camPosV = tPos - tOre * distance + Vector4(0, 1, 0, 0) * height;
-	viewV = (tPos - camPosV) / (tPos - camPosV).Length();
-	rightV  = viewV.Cross(Vector4(0, 1, 0, 0));
-	upV  = rightV.Cross(viewV);
-	//camPosV =  Vector4(0,0,0,0) ;
-	//viewV = Vector4(0, 0, -1, 0);
-	//rightV  = Vector4(0, 1, 0, 0);
-	//upV  = Vector4(0, 1, -1, 0);
+	if (camMode = 0) {
+		camPosV = tPos;
+		viewV = tOre;
+		rightV = Vector4(0, 1, 0, 0);
+		upV = Vector4(0, 1, 0, 0);
+		
+		
+	}
+	else if (camMode == 1) {
+		camPosV = tPos - tOre * distance + Vector4(0, 1, 0, 0) * height;
+		viewV = (tPos - camPosV) / (tPos - camPosV).Length();
+		rightV = viewV.Cross(Vector4(0, 1, 0, 0));
+		upV = rightV.Cross(viewV);
+	}
+	else {
+		camPosV = Vector4(0, 0, 0, 0);
+		viewV = Vector4(0, 0, -1, 0);
+		rightV = Vector4(1, 0, 0, 0);
+		upV = Vector4(0, 1, 0, 0);
+	}
 	
 }
 void  Camera::Movement() {

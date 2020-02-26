@@ -41,7 +41,7 @@ Matrix4 PerspectiveProjection(void) {
 	\fn		WinToVP
 	\brief	Calculates the window to view
 ******************************************************************************/
-Matrix4 WinToVP(float Hw, float Ww, float Hv, float Wv ) {
+Matrix4 WinToVP(float , float , float Hv, float Wv ) {
 
 	Matrix4 mat;
 
