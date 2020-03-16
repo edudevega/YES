@@ -14,18 +14,25 @@
 Matrix4 PerspectiveProjection(void) {
 	Matrix4 mat;
 	//Set all rows and cols to 0
-	for (int i = 0; i < 4; i++) {
+	//for (int i = 0; i < 4; i++) {
+	//
+	//	for (int j = 0; j < 4; j++) {
+	//		mat.m[i][j] = 0;
+	//		if (i == j)
+	//			//Set on the identity the focal length
+	//			mat.m[i][j] = CS250Parser::focal;
+	//	}
+	//}
 
-		for (int j = 0; j < 4; j++) {
-			mat.m[i][j] = 0;
-			if (i == j)
-				//Set on the identity the focal length
-				mat.m[i][j] = CS250Parser::focal;
-		}
-	}
+	float vertical = CS250Parser::top - CS250Parser::bottom;
+	float horizontal = CS250Parser::right - CS250Parser::left;
 
-	mat.m[3][3] = 0;
- 	mat.m[3][2] = -1;
+	mat.Identity();
+	mat.m[0][0] = CS250Parser::focal / horizontal;
+	mat.m[1][1] = CS250Parser::focal / vertical;
+	mat.m[2][2] = -(CS250Parser::farPlane + CS250Parser::nearPlane) / (CS250Parser::farPlane - CS250Parser::nearPlane);
+	mat.m[2][3] = -2*(CS250Parser::farPlane * CS250Parser::nearPlane) / (CS250Parser::farPlane - CS250Parser::nearPlane);
+	mat.m[3][2] = -1;
 
 	return mat;
 }
@@ -34,7 +41,7 @@ Matrix4 PerspectiveProjection(void) {
 	\fn		WinToVP
 	\brief	Calculates the window to view
 ******************************************************************************/
-Matrix4 WinToVP(float Hw, float Ww, float Hv, float Wv ) {
+Matrix4 WinToVP(float , float , float Hv, float Wv ) {
 
 	Matrix4 mat;
 
@@ -43,12 +50,12 @@ Matrix4 WinToVP(float Hw, float Ww, float Hv, float Wv ) {
 		mat.v[i] = 0;
 
 	//Set all the matrix values
-	mat.m[0][0] = Wv/Ww;
-	mat.m[1][1] = -Hv/Hw;
+	mat.m[0][0] = Wv/2.0f;
+	mat.m[1][1] = -Hv/2.0f;
 	mat.m[2][2] = 1;
 	mat.m[3][3] = 1;
-	mat.m[0][3] = Wv/2;
-	mat.m[1][3] = Hv/2;
+	mat.m[0][3] = Wv/2.0f;
+	mat.m[1][3] = Hv/2.0f;
 
 	return mat;
 }

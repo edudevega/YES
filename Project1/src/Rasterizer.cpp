@@ -29,7 +29,7 @@ void DrawMidpointLine(sf::Image &FrameBuffer, const sf::Vector2f & p1, const sf:
         yStep = -1;
         dy    = -dy;
     }
-    if (x > 0 && x < (int)FrameBuffer.getSize().x && y > 0 && y < (int)FrameBuffer.getSize().y)
+	if (x > 0 && x < (int)FrameBuffer.getSize().x && y > 0 && y < (int)FrameBuffer.getSize().y)
 	FrameBuffer.setPixel(x, y, color);
 
     if (abs(dy) > abs(dx)) // |m|>1
@@ -50,7 +50,7 @@ void DrawMidpointLine(sf::Image &FrameBuffer, const sf::Vector2f & p1, const sf:
             }
             else
                 dstart += dn;
-            if (x > 0 && x < (int)FrameBuffer.getSize().x && y > 0 && y < (int)FrameBuffer.getSize().y)
+			if (x > 0 && x < (int)FrameBuffer.getSize().x && y > 0 && y < (int)FrameBuffer.getSize().y)
 			FrameBuffer.setPixel(x, y, color);
         }
     }
@@ -72,7 +72,7 @@ void DrawMidpointLine(sf::Image &FrameBuffer, const sf::Vector2f & p1, const sf:
             }
             else
                 dstart += de;
-            if (x > 0 && x < (int)FrameBuffer.getSize().x && y > 0 && y < (int)FrameBuffer.getSize().y)
+			if (x > 0 && x < (int)FrameBuffer.getSize().x && y > 0 && y < (int)FrameBuffer.getSize().y)
             FrameBuffer.setPixel(x, y, sf::Color::Yellow);
         }
     }
