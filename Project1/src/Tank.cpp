@@ -7,6 +7,58 @@
 */
 #include "Tank.h"
 /******************************************************************************
+	\fn		PerspectiveProjection
+	\brief	Calculates the perspective projection matrix
+******************************************************************************/
+Matrix4 OrthogonalMethod(float angle, Vector4 view,Vector4 up, Vector4 right, Vector4 cop) {
+	
+	Vector4 u(up / up.Length());
+	Vector4 v(view / view.Length());
+	Vector4 w(right / right.Length());
+
+	//Step 1
+	Matrix4 tr1;
+	tr1.m[0][0] = u.x;
+	tr1.m[0][1] = u.y;
+	tr1.m[0][2] = u.z;
+	tr1.m[0][3] =-u.Dot(cop);
+	tr1.m[1][0] = v.x;
+	tr1.m[1][1] = v.y;
+	tr1.m[1][2] = v.z;
+	tr1.m[1][3] = -v.Dot(cop);
+	tr1.m[2][0] = w.x;
+	tr1.m[2][1] = w.y;
+	tr1.m[2][2] = w.z;
+	tr1.m[2][3] = -w.Dot(cop);
+	tr1.m[3][3] = 1;
+
+	//Step 2
+	Matrix4 rot = Rotate(angle, Y_AXIS);
+
+	//Step 3
+	Matrix4 tr2;
+	tr2.m[0][0] =u.x;
+	tr2.m[1][0] =u.y;
+	tr2.m[2][2] =u.z;
+	  
+	tr2.m[0][1] = v.x;
+	tr2.m[1][1] = v.y;
+	tr2.m[2][1] = v.z;
+	  
+	  
+	tr2.m[0][2] = w.x;
+	tr2.m[1][2] = w.y;
+	tr2.m[2][2] = w.z;
+	  
+	tr2.m[0][3] = cop.x;
+	tr2.m[1][3] = cop.y;
+	tr2.m[2][3] = cop.z;
+	 
+	tr2.m[3][3] = 1;
+
+	return tr2 * rot * tr1;
+}
+/******************************************************************************
 	\fn		Body Constructor
 	\brief	Constructor for the body class
 ******************************************************************************/
@@ -22,6 +74,9 @@ Body::Body(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis) : mS
 		v[i].z = data.vertices[i].z;
 		v[i].w = data.vertices[i].w;
 	}
+
+	upV = Vector4(0,1,0);
+	rightV = Ore.Cross(upV);
 
 	//Calculate the mTransformation matrices
 	Matrix4 rot = Rotate(mAngle, mAxis);
@@ -41,7 +96,7 @@ Body::Body(Vector4 Scale_, Vector4 Pos, Vector4 Ore, float Angle, int Axis) : mS
 void Body::Update(Matrix4 mat) {
 	
 	//Calculate the mTransformations
-	Matrix4 rot = Rotate(mAngle, mAxis);;
+	Matrix4 rot = OrthogonalMethod(mAngle, mOrientation, upV, rightV, mPos);
 	Matrix4 trans = Translate(mPos);
 	Matrix4 sca = Scale(mScale);
 	mTransform = mat * trans * rot * sca;
@@ -86,10 +141,12 @@ void Body::Movement() {
 		mAngle += 0.05f;
 
 		//Calculate the rotation matrix by that angle
-		Matrix4 rot = Rotate(angle, mAxis);
+		Matrix4 rot = OrthogonalMethod(angle,mOrientation,upV,rightV,mPos);
 
 		//AmPPly it to the orientation
-		mOrientation =  rot * mOrientation;
+		mOrientation = rot * mOrientation;
+		rightV = rot * rightV;
+  		upV = rot * upV;
 	}
 
 	//if D is pressed rotate the body
@@ -100,11 +157,78 @@ void Body::Movement() {
 		mAngle -= 0.05f;
 
 		//Calculate the rotation matrix by that angle
-		Matrix4 rot = Rotate(angle, mAxis);
+		Matrix4 rot = OrthogonalMethod(angle, mOrientation, upV, rightV, mPos);
 		
 		//AmPPly it to the orentation
 		mOrientation = rot * mOrientation;
+		rightV = rot * rightV;
+		upV = rot * upV;
 	}
+
+	//If both are pressed at the same time do nothing
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {}
+
+	//if A is pressed rotate the body
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+
+		//increase the angle
+		angle += 0.05f;
+		mAngle += 0.05f;
+
+		//Calculate the rotation matrix by that angle
+		Matrix4 rot = OrthogonalMethod(angle, upV, mOrientation, rightV, mPos);
+
+		//AmPPly it to the orientation
+		mOrientation = rot * mOrientation;
+		rightV = rot * rightV;
+		upV = rot * upV;
+	}
+
+	//if D is pressed rotate the body
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+
+		//Decrese the angle
+		angle -= 0.05f;
+		mAngle -= 0.05f;
+
+		//Calculate the rotation matrix by that angle
+		Matrix4 rot = OrthogonalMethod(angle, mOrientation, upV, rightV, mPos);
+
+		//AmPPly it to the orentation
+		mOrientation = rot * mOrientation;
+		rightV = rot * rightV;
+		upV = rot * upV;
+	}
+	//If both are pressed at the same time do nothing
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}
+
+	////if A is pressed rotate the body
+	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+
+	//	//increase the angle
+	//	angle += 0.05f;
+	//	mAngle += 0.05f;
+
+	//	//Calculate the rotation matrix by that angle
+	//	Matrix4 rot = Rotate(angle, X_AXIS);
+
+	//	//AmPPly it to the orientation
+	//	mOrientation = rot * mOrientation;
+	//}
+
+	////if D is pressed rotate the body
+	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+
+	//	//Decrese the angle
+	//	angle -= 0.05f;
+	//	mAngle -= 0.05f;
+
+	//	//Calculate the rotation matrix by that angle
+	//	Matrix4 rot = Rotate(angle, X_AXIS);
+
+	//	//AmPPly it to the orentation
+	//	mOrientation = rot * mOrientation;
+	//}
 }
 
 /******************************************************************************
@@ -152,7 +276,7 @@ void Body::Draw(sf::Image &image, bool mode) {
 Matrix4 Body::GetMatrix() {
 
 	//Calculate the matrices
-	Matrix4 rot = Rotate(mAngle, mAxis);;
+	Matrix4 rot = OrthogonalMethod(mAngle, mOrientation, upV, rightV, mPos);
 	Matrix4 trans = Translate(mPos);
 
 	return (trans * rot);
@@ -224,39 +348,6 @@ void Turret::Movement() {
 		v[i].w = data.vertices[i].w;
 	}
 
-	//Angle to store how much does it rotate
-	float angle = 0.0f;
-
-	//If both are pressed at the same time do nothing
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {}
-
-	//if E is pressed rotate the body
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-
-		//increase the angle
-		angle -= 0.05f;
-		mAngle -= 0.05f;
-
-		//Calculate the rotation matrix by that angle
-		Matrix4 rot = Rotate(angle, mAxis);
-
-		//AmPPly it to the orientation
-		mOrientation = rot * mOrientation;
-	}
-
-	//if Q is pressed rotate the body
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-
-		//Decrese the angle
-		angle += 0.05f;
-		mAngle += 0.05f;
-
-		//Calculate the rotation matrix by that angle
-		Matrix4 rot = Rotate(angle, mAxis);
-
-		//AmPPly it to the orentation
-		mOrientation = rot * mOrientation;
-	}
 }
 
 /******************************************************************************

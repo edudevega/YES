@@ -15,6 +15,8 @@ struct Body {
 	Vector4 mPos;
 
 	Vector4 mOrientation;
+	Vector4 upV;
+	Vector4 rightV;
 	float mAngle;
 	int mAxis;
 	CS250Parser data;
